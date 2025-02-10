@@ -8,7 +8,8 @@ import FilterService from '../services/filter.service';
 import AvaliationService from '../services/avaliation.service';
 
 export const AvaliarAcomodacao = async (req: Request, res: Response) => {
-    const { num_estrelas, comentario } = req.query;
+    const {id} = req.query;
+    const {num_estrelas, comentario} = req.body;
   
     const estrelas = Number(num_estrelas);
   
