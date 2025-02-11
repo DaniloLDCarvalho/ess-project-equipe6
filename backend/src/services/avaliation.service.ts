@@ -1,10 +1,12 @@
 import ReservationRepository from '../repositories/reservation.repository';
+import Database from '../database';
 
 class AvaliationService {
     static async avaliarAcomodacao(id: string,num_Estrelas: number,comentario: string){
 
         const reservationRepository = new ReservationRepository();
         const reserva = await reservationRepository.getReservation(id);
+    
 
         if (!reserva) {
             throw new Error("Reserva não encontrada.");
@@ -13,7 +15,6 @@ class AvaliationService {
         reserva.rating = { stars: num_Estrelas, comment: comentario };
 
         await reservationRepository.updateReservation(id, reserva);
-
 
     }
 }

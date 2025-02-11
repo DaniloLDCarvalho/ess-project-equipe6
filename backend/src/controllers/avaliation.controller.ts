@@ -12,10 +12,13 @@ export const AvaliarAcomodacao = async (req: Request, res: Response) => {
     const {num_estrelas, comentario} = req.body;
   
     const estrelas = Number(num_estrelas);
+    const id_reserva = String(id);
   
     if (!num_estrelas || isNaN(estrelas) || estrelas < 1 || estrelas > 5) {
       return res.status(400).json({ error: 'A nota deve ser um número entre 1 e 5.' });
     }
+
+    AvaliationService.avaliarAcomodacao(id_reserva,num_estrelas,comentario);
     
     res.json({ message: 'Avaliação registrada com sucesso!', estrelas, comentario });
   };
