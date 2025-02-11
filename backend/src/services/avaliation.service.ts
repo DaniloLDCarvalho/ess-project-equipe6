@@ -6,8 +6,15 @@ class AvaliationService {
         const reservationRepository = new ReservationRepository();
         const reserva = await reservationRepository.getReservation(id);
 
+        if (!reserva) {
+            throw new Error("Reserva não encontrada.");
+        }
 
+        reserva.rating = { stars: num_Estrelas, comment: comentario };
+
+        await reservationRepository.updateReservation(id, reserva);
 
 
     }
 }
+export default AvaliationService;
