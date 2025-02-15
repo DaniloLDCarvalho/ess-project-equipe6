@@ -3,7 +3,7 @@ import BaseRepository from './base.repository';
 
 class ReservationRepository extends BaseRepository<ReservationEntity> {
   constructor() {
-    super('Reservation');
+    super('reservations');
   }
 
   public async getReservations(): Promise<ReservationEntity[]> {
