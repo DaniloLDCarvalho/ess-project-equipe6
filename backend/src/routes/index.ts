@@ -14,6 +14,7 @@ router.get('/buscar-acomodacoes', buscarAcomodacoes);
 router.get('/filtrar-acomodacoes', filtrarAcomodacoes);
 router.get('/ordenar-acomodacoes', ordenarAcomodacoes);
 router.get('/avaliar-acomodacao', AvaliarAcomodacao);
+router.post('/avaliacoes', AvaliarAcomodacao);
 
 
 export default (app: Express) => {

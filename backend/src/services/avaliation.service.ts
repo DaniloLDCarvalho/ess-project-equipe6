@@ -2,25 +2,28 @@ import ReservationRepository from '../repositories/reservation.repository';
 import Database from '../database';
 
 class AvaliationService {
-    static async avaliarAcomodacao(id: string,num_Estrelas: number,comentario: string){
+  static async avaliarAcomodacao(id: string, num_Estrelas: number, comentario: string) {
+    try {
+      const reservationRepository = new ReservationRepository();
+      const reservas = await reservationRepository.getReservations();
+      console.log('Reservations:', reservas);
 
-        const reservationRepository = new ReservationRepository();
-        const reservas = await reservationRepository.getReservations();
-        console.log(reservas);
-    
-       //const db = Database.getInstance();  // Obtém a instância única do banco
-        //const reservas = db.data.reservations; // Acessa a lista de reservas
+      const reserva = reservas.find(res => res.id === id);
 
-        const reserva = reservas.find(res => res.id === id);
+      if (!reserva) {
+        throw new Error('Reserva não encontrada.');
+      }
+      reserva.rating = { stars: num_Estrelas, comment: comentario };
 
-        if (!reserva) {
-            throw new Error("Reserva não encontrada.");
-        }
+      const updatedReservation = await reservationRepository.updateReservation(id, reserva);
+      //console.log('Updated Reservation:', updatedReservation);
 
-        reserva.rating = { stars: num_Estrelas, comment: comentario };
-
-        await reservationRepository.updateReservation(id, reserva);
-
+      return updatedReservation;
+    } catch (error) {
+      console.error('Error in AvaliationService.avaliarAcomodacao:', error);
+      throw error; // Re-throw the error to be caught by the controller
     }
+  }
 }
+
 export default AvaliationService;
