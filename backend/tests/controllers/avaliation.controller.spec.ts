@@ -2,7 +2,6 @@ import supertest from 'supertest';
 import app from '../../src/app';
 import { di } from '../../src/di';
 import ReservationRepository from '../../src/repositories/reservation.repository';
-import AvaliationService from '../../src/services/avaliation.service';
 import ReservationEntity from '../../src/entities/reservation.entity';
 
 describe('AvaliationController', () => {
@@ -11,8 +10,14 @@ describe('AvaliationController', () => {
   let mockReservationEntity: ReservationEntity;
 
   beforeEach(() => {
+    // Get the repository instance from the DI container
     mockReservationRepository = di.getRepository<ReservationRepository>(ReservationRepository);
-    
+
+    // Ensure that the repository instance is not undefined
+    if (!mockReservationRepository) {
+      throw new Error('Failed to get ReservationRepository from DI container');
+    }
+
     mockReservationEntity = new ReservationEntity({
       id: 'f5b0e3d2-4b6f-4d8f-8f5a-7b1a5b2f8a1a',
       pf_id: '1',
@@ -27,6 +32,12 @@ describe('AvaliationController', () => {
         comment: 'o'
       }
     });
+
+    // Mock the repository methods
+    jest.spyOn(mockReservationRepository, 'getReservations').mockResolvedValue([mockReservationEntity]);
+    jest.spyOn(mockReservationRepository, 'updateReservation').mockImplementation(async (id, data) => {
+      return { ...data, id };
+    });
   });
 
   it('should register an accommodation review successfully', async () => {
@@ -34,6 +45,8 @@ describe('AvaliationController', () => {
       num_estrelas: 5,
       comentario: 'Ótima acomodação!'
     });
+
+    console.log(response.body); // Log the response body for debugging
 
     expect(response.status).toBe(200);
     expect(response.body.message).toEqual('Avaliação registrada com sucesso!');

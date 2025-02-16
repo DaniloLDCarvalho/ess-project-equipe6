@@ -1,11 +1,15 @@
 import ReservationRepository from '../repositories/reservation.repository';
-import Database from '../database';
 
 class AvaliationService {
-  static async avaliarAcomodacao(id: string, num_Estrelas: number, comentario: string) {
+  private reservationRepository: ReservationRepository;
+
+  constructor(reservationRepository: ReservationRepository) {
+    this.reservationRepository = reservationRepository;
+  }
+
+  async avaliarAcomodacao(id: string, num_Estrelas: number, comentario: string) {
     try {
-      const reservationRepository = new ReservationRepository();
-      const reservas = await reservationRepository.getReservations();
+      const reservas = await this.reservationRepository.getReservations();
       console.log('Reservations:', reservas);
 
       const reserva = reservas.find(res => res.id === id);
@@ -15,8 +19,8 @@ class AvaliationService {
       }
       reserva.rating = { stars: num_Estrelas, comment: comentario };
 
-      const updatedReservation = await reservationRepository.updateReservation(id, reserva);
-      //console.log('Updated Reservation:', updatedReservation);
+      const updatedReservation = await this.reservationRepository.updateReservation(id, reserva);
+      console.log('Updated Reservation:', updatedReservation);
 
       return updatedReservation;
     } catch (error) {
