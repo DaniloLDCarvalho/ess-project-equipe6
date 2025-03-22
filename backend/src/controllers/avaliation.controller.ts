@@ -22,7 +22,7 @@ export const AvaliarAcomodacao = async (req: Request, res: Response) => {
       .status(400)
       .json({ error: 'A nota deve ser um número entre 1 e 5.' });
   }
-
+  console.log(estrelas,comentario)
   const avaliationService = di.getService<AvaliationService>(AvaliationService);
 
   const result = await avaliationService.avaliarAcomodacao(
